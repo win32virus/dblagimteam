@@ -1,20 +1,29 @@
-from flask import Flask, render_template, request
+from flask import Flask, request
+import json
 
 app = Flask(__name__)
 
 
-@app.route('/hello/<name>')
-def hello(name):
-    return render_template('hello.html', name=name)
-
-
 @app.route('/')
-def index():
-    return "hello, world"
+def main():
+    return "hell, world"
 
-@app.route('/test',methods=['GET'])
-def test():
-    return request.args.get('user')
+
+@app.route('/user', methods=['GET', 'POST'])
+def user():
+    if request.method == 'GET':
+        user_id = request.args.get('id')
+        user_pw = request.args.get('pw')
+    elif request.method == 'POST':
+        user_id = request.form['id']
+        user_pw = request.form['pw']
+
+    if user_id is None or user_pw is None:
+        return "id or pw error"
+    else:
+        result = {'user_id': user_id, 'user_pw': user_pw}
+        return json.dumps(result)
+
 
 if __name__ == '__main__':
-    app.run('0.0.0.0',5000)
+    app.run('0.0.0.0', 5000)
