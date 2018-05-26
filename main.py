@@ -10,11 +10,20 @@ def hello(name):
 
 @app.route('/')
 def index():
-    return "hello, world1324"
+    return render_template('login_form.html')
 
-@app.route('/test',methods=['GET'])
+@app.route('/sign_up')
+def sign_up():
+    return render_template('sign_up_form.html')
+
+@app.route('/board_list')
+def board_list():
+    return render_template('board_list.html')
+
+@app.route('/test', methods=['GET'])
 def test():
     return request.args.get('user')
 
+
 if __name__ == '__main__':
-    app.run('0.0.0.0',5000)
+    app.run('0.0.0.0', 5000)
