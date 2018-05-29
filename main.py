@@ -1,16 +1,22 @@
 #-*-coding:utf-8
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, redirect, url_for
 import pymysql
 import json
+import os
 
 app = Flask(__name__)
-conn = pymysql.connect(host='localhost', user='root', password='epdlxjqpdltmxlavm12', db='hanaman', charset='utf8', autocommit=True)
+app.secret_key = os.urandom(24)
+conn = pymysql.connect(host='localhost', user='root', password='epdlxjqpdltmxlavm12',
+                       db='hanaman', charset='utf8', autocommit=True, cursorclass=pymysql.cursors.DictCursor)
 cur = conn.cursor()
 
 
 @app.route('/')
 def main():
-    return render_template('login.html')
+    if 'user_id' in session:
+        return render_template('board_list.html')
+    else:
+        return render_template('login.html')
 
 
 @app.route('/join')
@@ -23,33 +29,53 @@ def map_test():
     return render_template('map.html')
 
 
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('main'))
+
+
 @app.route('/login', methods=['POST'])
 def login():
     user_id = request.form['id']
     user_pw = request.form['pw']
-    query = "select user_id from user where user_id = %s and user_pw = %s"
+    query = "select user_id, user_name, user_email, user_phone from user where " \
+            "user_id = %s and user_pw = password(%s)"
 
     if user_id is None or user_pw is None:
-        result = {'result': 'id or pw error'}
+        return redirect(url_for('main'))
     else:
-        query_result = cur.execute(query, (user_id, user_pw))
-        result = {'result': query_result}
-    return json.dumps(result)
+        cur.execute(query, (user_id, user_pw))
+        row = cur.fetchone()
+        if row is not None:
+            session['user_id'] = row['user_id']
+            session['user_name'] = row['user_name']
+            session['user_email'] = row['user_email']
+            session['user_phone'] = row['user_phone']
+    return redirect(url_for('main'))
 
 
-@app.route('/user', methods=['POST'])
+@app.route('/sign_up', methods=['POST'])
 def create_user():
     user_id = request.form['id']
     user_pw = request.form['pw']
     user_name = request.form['name']
-    user_email = request.form['phone']
-
-    if user_id is None or user_pw is None or user_name is None or user_email is None:
+    user_email = request.form['email']
+    user_phone = request.form['phone']
+    result = {}
+    if user_id is None or user_pw is None or user_name is None or user_email is None or user_phone is None:
         result = {'result': 'value error'}
     else:
+        check_query = "select idx from user where user_id = %s"
+        cur.execute(check_query, (user_id,))
+        row = cur.fetchone()
+        print(row)
+        if row is not None:
+            result = {'result': 'already existed'}
+            return json.dumps(result)
         query = "insert into user(user_id, user_pw, user_name, user_email, user_phone) " \
                 "values(%s, password(%s), %s, %s, %s)"
-        query_result = cur.execute(query, (user_id, user_pw, user_name, user_email))
+        query_result = cur.execute(query, (user_id, user_pw, user_name, user_email, user_phone))
         result = {'result': query_result}
     return json.dumps(result)
 

@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
 </head>
 <body>
-<form method="GET" action="/user">
-    ID : <input name = "id"><br>
-    PW : <input name = "pw"><br>
-    <input type = "submit" value="login">
-</form>
-<a href="/join">Join</a>
+    <form method="post" action='/login'>
+        <h3>login</h3>
+        <table>
+            <tr>
+                <td>유저 아이디</td>
+                <td><input type='text' name='id' placehoder='username'></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type='password' name='pw' placehoder='password'></td>
+             </tr>
+        </table>
+        <button type="'submit">login</button>
+    </form>
+    <button type="button" onclick="location.href='/join'">sign_up</button>
 </body>
 </html>
