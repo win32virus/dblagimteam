@@ -6,7 +6,7 @@
 </head>
 <body>
     <a href = "/logout">로그아웃</a>
-    <table width="1000" height="500" border="2">
+    <table border="2">
         <colgroup>
             <col width="10%" />
             <col width="40%" />
@@ -23,16 +23,17 @@
             <th>대여가격</th>
             <th>대여상태</th>
         </tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-        <tr><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+        {% for row in result %}
+        <tr>
+            <th>{{ row['idx'] }}</th>
+            <td><a href="/post/{{ row['idx'] }}">{{ row['post_title'] }}</a></td>
+            <td>{{ row['user_name'] }}</td>
+            <td>{{ row['type_name'] }}</td>
+            <td>{{ row['post_rental_price'] }}</td>
+            <td>{{ row['status_name'] }}</td>
+
+        {% endfor %}
     </table>
 </body>
+<a href="/post">글쓰기</a>
 </html>
