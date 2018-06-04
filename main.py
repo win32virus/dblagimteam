@@ -14,11 +14,17 @@ cur = conn.cursor()
 @app.route('/')
 def main():
     if 'user_id' in session:
+        page = request.args.get('page')
+        if page is None:
+            page = 1
+        else:
+            page = int(page)
         query = "select post.idx, post_title, user.user_name, " \
                 "rental_status.status_name, goods_type.type_name, post_rental_price from post " \
                 "left join user on post_writer=user.idx " \
                 "left join goods_type on post_goods_type=goods_type.idx " \
-                "left join rental_status on post_rental_status=rental_status.idx limit 0,10"
+                "left join rental_status on post_rental_status=rental_status.idx " \
+                "limit {0},{1}".format(10*(page-1), 10*(page-1)+10)
         cur.execute(query)
         query_result = cur.fetchall()
         return render_template('board_list.html', result=query_result)
@@ -101,7 +107,8 @@ def create_user():
 def get_post(pid):
     post_idx = pid
     query = "select post.idx, post_title, post_contents, user.user_name, " \
-            "goods_type.type_name, rental_status.status_name, post_rental_duration, post_rental_price from post " \
+            "goods_type.type_name, rental_status.status_name, post_rental_duration, post_rental_price, " \
+            "ST_X(post_geom) as x, ST_Y(post_geom) as y from post " \
             "join user on post_writer=user.idx " \
             "join goods_type on post_goods_type=goods_type.idx " \
             "join rental_status on post_rental_status=rental_status.idx " \
@@ -121,8 +128,8 @@ def create_post():
     post_goods_type = request.form['goods_type']  # int
     post_rental_duration = request.form['duration']  # per day, int
     post_rental_price = request.form['price']  # won, int
+    post_geom = request.form['geom']
     post_writer = session['user_idx']
-    post_geom = '30,127'
 
     query = "insert into post(post_title, post_contents, post_writer, post_goods_type, post_rental_duration," \
             "post_rental_status, post_rental_price, post_geom) " \

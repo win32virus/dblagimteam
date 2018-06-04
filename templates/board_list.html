@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>list</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
+<div class="container">
+
     <a href = "/logout">로그아웃</a>
     <table border="2">
         <colgroup>
@@ -31,9 +38,18 @@
             <td>{{ row['type_name'] }}</td>
             <td>{{ row['post_rental_price'] }}</td>
             <td>{{ row['status_name'] }}</td>
-
         {% endfor %}
+        </tr>
     </table>
+    <a href="/post">글쓰기</a>
+    <a href="#">내가 쓴 글 보기</a>
+    <a href="#">신청 현황</a>
+    <br>
+    [page]
+    {%  for i in range(0, ((result|length)//10) + 1) %}
+    <a href="/?page={{ i + 1 }}">{{ i + 1 }}</a>
+    {% endfor %}
+</div>
 </body>
-<a href="/post">글쓰기</a>
+
 </html>
