@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>myinfo</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <table class="table">
+        <tr>
+            <td>
+                내 정보
+            </td>
+        </tr>
+        <tr>
+            <td>
+                ID : {{ user_info['user_id'] }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                 이름 : {{ user_info['user_name'] }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                 이메일 : {{ user_info['user_email'] }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                연락처 : {{ user_info['user_phone'] }}
+            </td>
+        </tr>
+    </table>
+
+   <table class="table table-bordered">
+       <tr>
+            <td>
+                내가 쓴 글
+            </td>
+        </tr>
+        <colgroup>
+            <col width="10%" />
+            <col width="40%" />
+            <col width="10%" />
+            <col width="10%" />
+            <col width="20%" />
+            <col width="10%" />
+        </colgroup>
+        <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>물품종류</th>
+            <th>대여가격</th>
+            <th>대여상태</th>
+        </tr>
+        {% for row in result %}
+        <tr>
+            <th>{{ row['idx'] }}</th>
+            <td><a href="/post/{{ row['idx'] }}">{{ row['post_title'] }}</a></td>
+            <td>{{ row['user_name'] }}</td>
+            <td>{{ row['type_name'] }}</td>
+            <td>{{ row['post_rental_price'] }}</td>
+            <td>{{ row['status_name'] }}</td>
+        {% endfor %}
+        </tr>
+    </table>
+    <table class="table">
+        <tr>
+    {%  for i in range(0, ((result|length)//10) + 1) %}
+    <td>
+        <a href="/?page={{ i + 1 }}">{{ i + 1 }}</a>
+    </td>
+    {% endfor %}
+        </tr>
+    </table>
+</div>
+</body>
+</html>
